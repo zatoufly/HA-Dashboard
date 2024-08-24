@@ -1,0 +1,1724 @@
+kiosk_mode:
+  mobile_settings:
+    hide_header: true
+    ignore_entity_settings: true
+    custom_width: 768
+views:
+  - title: Mobile
+    path: mobile
+    icon: mdi:cellphone
+    type: sections
+    max_columns: 1
+    theme: Mushroom Shadow
+    sections:
+      - type: grid
+        cards: 
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: weather
+                entity: weather.maison
+                show_temperature: true
+                show_conditions: false
+                tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+              - type: template
+                icon: mdi:home-lightning-bolt
+                content: Énergie
+                icon_color: |-
+                  {% if is_state(entity, 'Blanc') %}
+                    white
+                  {% elif is_state(entity, 'Bleu') %}  
+                    blue
+                  {% elif is_state(entity, 'Rouge') %}  
+                    red
+                  {% else %}  
+                    grey
+                  {% endif %}
+                entity: sensor.rte_tempo_couleur_actuelle
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+            alignment: center
+            view_layout:
+              position: main
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                primary: ''
+                secondary: ''
+                icon: mdi:thermometer
+                icon_color: red
+                layout: vertical
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                tap_action:
+                  action: navigate
+                  navigation_path: /dashboard-maison/mobile-temperature
+              - type: custom:mushroom-template-card
+                primary: ''
+                secondary: ''
+                icon: mdi:home-lightning-bolt
+                tap_action:
+                  action: navigate
+                  navigation_path: /dashboard-maison/mobile-energy
+                icon_color: yellow
+              - type: custom:mushroom-template-card
+                primary: ''
+                secondary: ''
+                icon: mdi:nas
+                icon_color: green
+                layout: vertical
+                double_tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                tap_action:
+                  action: navigate
+                  navigation_path: /dashboard-maison/mobile-baie
+              - type: custom:mushroom-entity-card
+                layout: vertical
+                primary_info: none
+                secondary_info: none
+                entity: scene.salon_youtube
+                tap_action:
+                  action: toggle
+              - type: custom:mushroom-entity-card
+                layout: vertical
+                primary_info: none
+                secondary_info: none
+                tap_action:
+                  action: toggle
+                entity: scene.travail
+          - type: custom:mushroom-title-card
+            title: ''
+            subtitle: ''
+          - square: false
+            type: grid
+            cards:
+              - type: custom:vertical-stack-in-card
+                cards:
+                  - type: custom:mushroom-template-card
+                    icon: mdi:sofa
+                    icon_color: |
+                      {% if is_state(entity, 'on') %}
+                        orange
+                      {% else %}  
+                        grey
+                      {% endif %}
+                    primary: Salon
+                    secondary: >-
+                      {{ states('sensor.temp_salon_temperature') | round(0) }}°C
+                      / {{ states('sensor.temp_salon_humidity' ) | round(0) }}%
+                    layout: horizontal
+                    tap_action:
+                      action: navigate
+                      navigation_path: /dashboard-maison/mobile-salon
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: toggle
+                    badge_icon: ''
+                    badge_color: ''
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: media_player.sonos_beam_gen_2
+                        icon: mdi:play-pause
+                        icon_color: |-
+                          {% if is_state(entity, 'playing') %} 
+                            green
+                          {% else %}
+                           grey
+                          {% endif %}
+                        tap_action:
+                          action: more-info
+                      - type: template
+                        entity: binary_sensor.fenetre_salon_contact
+                        hold_action:
+                          action: toggle
+                        tap_action:
+                          action: more-info
+                        icon: |-
+                          {% if is_state(entity, 'on') %} 
+                           mdi:window-open-variant
+                          {% elif is_state(entity, 'off') %} 
+                           mdi:window-closed-variant
+                          {% else %}
+                           mdi:window-shutter-alert
+                          {% endif %}
+                        icon_color: |-
+                          {% if is_state(entity, 'on') %} 
+                           grey
+                          {% elif is_state(entity, 'off') %} 
+                           grey
+                          {% else %}
+                           orange
+                          {% endif %}
+                      - type: template
+                        entity: light.salon
+                        icon: mdi:lightbulb
+                        hold_action:
+                          action: toggle
+                        icon_color: |-
+                          {% if is_state(entity, 'on') %} 
+                           orange
+                          {% elif is_state(entity, 'off') %} 
+                           grey
+                          {% else %}
+                           grey
+                          {% endif %}
+                        tap_action:
+                          action: toggle
+                    alignment: end
+              - type: custom:vertical-stack-in-card
+                cards:
+                  - type: custom:mushroom-template-card
+                    icon: mdi:bed
+                    icon_color: |
+                      {% if is_state(entity, 'on') %}
+                        yelow
+                      {% else %}  
+                        grey
+                      {% endif %}
+                    primary: Chambre
+                    secondary: >-
+                      {{ states('sensor.temp_chambre_temperature') | round(0)
+                      }}°C / {{ states('sensor.temp_chambre_humidity' ) |
+                      round(0) }}%
+                    layout: horizontal
+                    tap_action:
+                      action: navigate
+                      navigation_path: /dashboard-maison/mobile-chambre
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: toggle
+                    badge_icon: ''
+                    badge_color: ''
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: cover.cover_chambre
+                        icon: |-
+                          {% if is_state(entity, 'open') %} 
+                           mdi:curtains
+                          {% elif is_state(entity, 'closed') %} 
+                            mdi:curtains-closed
+                          {% elif is_state(entity, 'closing') %} 
+                           mdi:arrow-collapse-horizontal
+                          {% elif is_state(entity, 'opening') %} 
+                           mdi:arrow-expand-horizontal
+                          {% endif %}
+                        hold_action:
+                          action: more-info
+                        icon_color: |-
+                          {% if is_state(entity, 'open') %} 
+                           green
+                          {% elif is_state(entity, 'closed') %} 
+                           grey
+                          {% else %}
+                           grey
+                          {% endif %}
+                        tap_action:
+                          action: toggle
+                      - type: template
+                        entity: binary_sensor.fenetre_chambre_contact
+                        hold_action:
+                          action: toggle
+                        tap_action:
+                          action: more-info
+                        icon: |-
+                          {% if is_state(entity, 'on') %} 
+                           mdi:window-open-variant
+                          {% elif is_state(entity, 'off') %} 
+                           mdi:window-closed-variant
+                          {% else %}
+                           mdi:window-shutter-alert
+                          {% endif %}
+                        icon_color: |-
+                          {% if is_state(entity, 'on') %} 
+                           green
+                          {% elif is_state(entity, 'off') %} 
+                           grey
+                          {% else %}
+                           orange
+                          {% endif %}
+                      - type: template
+                        entity: light.chambre
+                        icon: mdi:lightbulb
+                        hold_action:
+                          action: toggle
+                        icon_color: |-
+                          {% if is_state(entity, 'on') %} 
+                           orange
+                          {% elif is_state(entity, 'off') %} 
+                           grey
+                          {% else %}
+                           grey
+                          {% endif %}
+                        tap_action:
+                          action: toggle
+                    alignment: end
+              - type: custom:vertical-stack-in-card
+                cards:
+                  - type: custom:mushroom-template-card
+                    icon: mdi:bathtub
+                    icon_color: |
+                      {% if is_state(entity, 'on') %}
+                        yelow
+                      {% else %}  
+                        grey
+                      {% endif %}
+                    primary: Salle de Bain
+                    secondary: >-
+                      {{ states('sensor.temp_salle_de_bain_temperature') |
+                      round(0) }}°C / {{
+                      states('sensor.temp_salle_de_bain_humidity' ) | round(0)
+                      }}%
+                    layout: horizontal
+                    tap_action:
+                      action: navigate
+                      navigation_path: /dashboard-maison/mobile-salle-de-bain
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: toggle
+                    badge_icon: >
+                      {% if
+                      is_state('binary_sensor.motion_salle_de_bain_occupancy',
+                      'on') %}
+                        mdi:motion-sensor
+                      {% else %}  
+                        mdi:motion-sensor-off
+                      {% endif %}
+                    badge_color: >
+                      {% if
+                      is_state('binary_sensor.motion_salle_de_bain_occupancy',
+                      'on') %}
+                        green
+                      {% else %}  
+                        grey
+                      {% endif %}
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: light.spot_salle_de_bain
+                        icon: mdi:lightbulb
+                        hold_action:
+                          action: toggle
+                        icon_color: |-
+                          {% if is_state(entity, 'on') %} 
+                           orange
+                          {% elif is_state(entity, 'off') %} 
+                           grey
+                          {% else %}
+                           grey
+                          {% endif %}
+                    alignment: end
+              - type: custom:vertical-stack-in-card
+                cards:
+                  - type: custom:mushroom-template-card
+                    icon: mdi:toilet
+                    icon_color: |
+                      {% if is_state(entity, 'on') %}
+                        yelow
+                      {% else %}  
+                        grey
+                      {% endif %}
+                    primary: Toilettes
+                    secondary: >-
+                      {{ states('sensor.temp_toilettes_temperature') | round(0)
+                      }}°C / {{ states('sensor.temp_toilettes_humidity' ) |
+                      round(0) }}%
+                    layout: horizontal
+                    tap_action:
+                      action: navigate
+                      navigation_path: /dashboard-maison/mobile-toilettes
+                    double_tap_action:
+                      action: none
+                    hold_action:
+                      action: none
+                    badge_icon: >
+                      {% if
+                      is_state('binary_sensor.aqara_presence_sensor_fp1e_occupation',
+                      'on') %}
+                        mdi:motion-sensor
+                      {% else %}  
+                        mdi:motion-sensor-off
+                      {% endif %}
+                    badge_color: >-
+                      {% if
+                      is_state('binary_sensor.aqara_presence_sensor_fp1e_occupation',
+                      'on') %}
+                        green
+                      {% else %}  
+                        grey
+                      {% endif %}
+                  - type: custom:mushroom-chips-card
+                    chips:
+                      - type: template
+                        entity: light.plafond_toilettes
+                        icon: mdi:lightbulb
+                        hold_action:
+                          action: toggle
+                        icon_color: |-
+                          {% if is_state(entity, 'on') %} 
+                           orange
+                          {% elif is_state(entity, 'off') %} 
+                           grey
+                          {% else %}
+                           grey
+                          {% endif %}
+                    alignment: end
+            columns: 2
+          - type: custom:mushroom-title-card
+            title: ''
+            subtitle: ''
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-climate-card
+                entity: climate.salon
+                show_temperature_control: true
+                collapsible_controls: false
+                hvac_modes: []
+                layout: vertical
+                name: Salon
+              - type: custom:mushroom-climate-card
+                entity: climate.chambre
+                show_temperature_control: true
+                collapsible_controls: false
+                hvac_modes: []
+                layout: vertical
+              - type: custom:mushroom-climate-card
+                entity: climate.salle_de_bain
+                show_temperature_control: true
+                collapsible_controls: false
+                hvac_modes: []
+                name: SbB
+                layout: vertical
+            view_layout:
+              position: main
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-humidifier-card
+                entity: humidifier.dehumidifier_f538
+                show_target_humidity_control: false
+                name: Deshumidificateur
+                fill_container: true
+              - type: tile
+                entity: fan.dehumidifier_f538_fan
+                show_entity_picture: false
+                vertical: false
+                name: Fan
+                hide_state: false
+                state_content: preset_mode
+          - type: vertical-stack
+            cards:
+              - type: conditional
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.temp_salle_de_bain_humidity
+                    above: 75
+                card:
+                  type: tile
+                  visibility:
+                    - condition: numeric_state
+                      entity: sensor.temp_salle_de_bain_humidity
+                      above: 75
+                  entity: sensor.temp_salle_de_bain_humidity
+                  hide_state: true
+                  vertical: false
+                  name: 'Humidité trop haute : Salle de bain'
+                  icon: mdi:water-percent-alert
+                  color: red
+                  show_entity_picture: false
+                  tap_action:
+                    action: none
+                  icon_tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - condition: state
+                    entity: binary_sensor.dehumidifier_f538_tank_full
+                    state: 'on'
+                card:
+                  type: tile
+                  visibility:
+                    - condition: numeric_state
+                      entity: sensor.temp_salle_de_bain_humidity
+                      above: 75
+                  hide_state: true
+                  vertical: false
+                  name: Réservoir déshumidificateur plein
+                  icon: mdi:air-humidifier-off
+                  color: red
+                  show_entity_picture: false
+                  tap_action:
+                    action: none
+                  icon_tap_action:
+                    action: none
+                  entity: humidifier.dehumidifier_f538
+              - type: conditional
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.temp_salon_humidity
+                    above: 75
+                card:
+                  type: tile
+                  visibility:
+                    - condition: numeric_state
+                      entity: sensor.temp_salon_humidity
+                      above: 75
+                  entity: sensor.temp_salon_humidity
+                  hide_state: true
+                  vertical: false
+                  name: 'Humidité trop haute : Salon'
+                  icon: mdi:water-percent-alert
+                  color: red
+                  show_entity_picture: false
+                  tap_action:
+                    action: none
+                  icon_tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.temp_chambre_humidity
+                    above: 75
+                card:
+                  type: tile
+                  visibility:
+                    - condition: numeric_state
+                      entity: sensor.temp_chambre_humidity
+                      above: 75
+                  entity: sensor.temp_chambre_humidity
+                  hide_state: true
+                  vertical: false
+                  name: 'Humidité trop haute : Chambre'
+                  icon: mdi:water-percent-alert
+                  color: red
+                  show_entity_picture: false
+                  tap_action:
+                    action: none
+                  icon_tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.temp_toilettes_humidity
+                    above: 75
+                card:
+                  type: tile
+                  visibility:
+                    - condition: numeric_state
+                      entity: sensor.temp_toilettes_humidity
+                      above: 75
+                  entity: sensor.temp_toilettes_humidity
+                  hide_state: true
+                  vertical: false
+                  name: 'Humidité trop haute : Toilettes'
+                  icon: mdi:water-percent-alert
+                  color: red
+                  show_entity_picture: false
+                  tap_action:
+                    action: none
+                  icon_tap_action:
+                    action: none
+  - path: mobile-salon
+    icon: mdi:sofa
+    type: sections
+    max_columns: 1
+    sections:
+      - type: grid
+        cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: back
+            layout_options:
+              grid_columns: 1
+              grid_rows: auto
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                icon: mdi:sofa
+                content: Salon
+              - type: template
+                entity: binary_sensor.fenetre_salon_contact
+                hold_action:
+                  action: toggle
+                tap_action:
+                  action: more-info
+                icon: |-
+                  {% if is_state(entity, 'on') %} 
+                   mdi:window-open-variant
+                  {% elif is_state(entity, 'off') %} 
+                   mdi:window-closed-variant
+                  {% else %}
+                   mdi:window-shutter-alert
+                  {% endif %}
+                icon_color: |-
+                  {% if is_state(entity, 'on') %} 
+                   green
+                  {% elif is_state(entity, 'off') %} 
+                   grey
+                  {% else %}
+                   orange
+                  {% endif %}
+                content: |-
+                  {% if is_state(entity, 'on') %} 
+                   Ouvert
+                  {% elif is_state(entity, 'off') %} 
+                   Fermé
+                  {% else %}
+                   orange
+                  {% endif %}
+            alignment: start
+            view_layout:
+              position: main
+            layout_options:
+              grid_columns: 3
+              grid_rows: auto
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.temp_salon_temperature
+                primary_info: state
+                secondary_info: none
+                icon_color: red
+              - type: custom:mushroom-entity-card
+                entity: sensor.temp_salon_humidity
+                primary_info: state
+                secondary_info: none
+                icon_color: blue
+            columns: 2
+      - type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            entity: cover.cover_chambre
+            name: Lumières
+            icon: mdi:lightbulb
+            layout_options:
+              grid_columns: 4
+              grid_rows: 1
+            card_layout: large
+          - type: custom:mushroom-light-card
+            icon: ''
+            show_brightness_control: true
+            show_color_control: true
+            show_color_temp_control: true
+            use_light_color: true
+            collapsible_controls: false
+            entity: light.hue_play_tv
+            layout_options:
+              grid_columns: 4
+              grid_rows: 2
+          - type: custom:mushroom-light-card
+            entity: light.ruban_cuisine
+            icon: ''
+            show_brightness_control: true
+            show_color_control: true
+            show_color_temp_control: true
+            use_light_color: true
+            collapsible_controls: false
+            layout_options:
+              grid_columns: 4
+              grid_rows: 2
+      - type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            entity: cover.cover_chambre
+            name: Appareils
+            icon: mdi:devices
+            card_layout: large
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-select-card
+                entity: select.radiateur_salon_pilot_wire_mode
+                icon: mdi:radiator
+                fill_container: false
+                name: Radiateur
+                secondary_info: none
+              - type: custom:mushroom-climate-card
+                entity: climate.salon
+                name: Thermostat
+                show_temperature_control: true
+                hvac_modes: []
+              - type: custom:mushroom-template-card
+                primary: PlayStation
+                icon: mdi:sony-playstation
+                icon_color: '{{ ''green'' if states(entity) == ''on'' else ''grey'' }}'
+                tap_action:
+                  action: toggle
+                entity: switch.evvr_spc_00f6_energy_monitoring_smart_relay_plug
+                secondary: ''
+                layout: vertical
+                badge_icon: ''
+                badge_color: ''
+                fill_container: false
+                multiline_secondary: false
+              - type: custom:mushroom-entity-card
+                tap_action:
+                  action: toggle
+                fill_container: false
+                name: Baie
+                icon_color: teal
+                entity: switch.plug_apc
+                layout: vertical
+                secondary_info: none
+              - type: custom:mushroom-media-player-card
+                entity: media_player.sonos_beam_gen_2
+                media_controls:
+                  - previous
+                  - play_pause_stop
+                  - repeat
+                  - next
+                volume_controls:
+                  - volume_buttons
+                  - volume_set
+                use_media_info: true
+                show_volume_level: true
+                collapsible_controls: false
+                icon: phu:sonos-beam
+                icon_type: entity-picture
+            columns: 2
+    subview: true
+    cards: []
+    theme: Mushroom Shadow
+  - path: mobile-chambre
+    icon: mdi:bed
+    type: sections
+    max_columns: 1
+    theme: Mushroom Shadow
+    subview: true
+    sections:
+      - type: grid
+        cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: back
+            layout_options:
+              grid_columns: 1
+              grid_rows: auto
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                icon: mdi:bed
+                content: Chambre
+              - type: template
+                entity: binary_sensor.fenetre_chambre_contact
+                hold_action:
+                  action: toggle
+                tap_action:
+                  action: more-info
+                icon: |-
+                  {% if is_state(entity, 'on') %} 
+                   mdi:window-open-variant
+                  {% elif is_state(entity, 'off') %} 
+                   mdi:window-closed-variant
+                  {% else %}
+                   mdi:window-shutter-alert
+                  {% endif %}
+                icon_color: |-
+                  {% if is_state(entity, 'on') %} 
+                   green
+                  {% elif is_state(entity, 'off') %} 
+                   grey
+                  {% else %}
+                   orange
+                  {% endif %}
+                content: |-
+                  {% if is_state(entity, 'on') %} 
+                   Ouvert
+                  {% elif is_state(entity, 'off') %} 
+                   Fermé
+                  {% else %}
+                   orange
+                  {% endif %}
+            alignment: start
+            view_layout:
+              position: main
+            layout_options:
+              grid_columns: 3
+              grid_rows: auto
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.temp_chambre_temperature
+                primary_info: state
+                secondary_info: none
+                icon_color: red
+              - type: custom:mushroom-entity-card
+                entity: sensor.temp_chambre_humidity
+                primary_info: state
+                secondary_info: none
+                icon_color: blue
+            columns: 2
+      - type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            entity: cover.cover_chambre
+            name: Lumières
+            icon: mdi:lightbulb
+            layout_options:
+              grid_columns: 4
+              grid_rows: 1
+            card_layout: large
+          - type: custom:mushroom-light-card
+            icon: mdi:ceiling-light
+            show_brightness_control: true
+            show_color_control: true
+            show_color_temp_control: true
+            use_light_color: true
+            collapsible_controls: false
+            name: Plafond Chambre
+            entity: light.plafond_chambre
+            layout_options:
+              grid_columns: 4
+              grid_rows: 2
+            secondary_info: none
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-light-card
+                icon: mdi:bed
+                show_brightness_control: true
+                show_color_control: false
+                show_color_temp_control: false
+                use_light_color: true
+                collapsible_controls: false
+                name: Lit
+                entity: light.ruban_chambre
+                secondary_info: none
+              - type: custom:mushroom-light-card
+                icon: mdi:desk
+                show_brightness_control: true
+                show_color_control: false
+                show_color_temp_control: false
+                use_light_color: true
+                collapsible_controls: false
+                name: Bureau
+                entity: light.ruban_bureau_lumiere
+                secondary_info: none
+      - type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            entity: cover.cover_chambre
+            name: Appareils
+            icon: mdi:devices
+            card_layout: large
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-select-card
+                entity: select.radiateur_chambre_pilot_wire_mode
+                icon: mdi:radiator
+                fill_container: false
+                name: Radiateur
+                secondary_info: none
+              - type: custom:mushroom-climate-card
+                entity: climate.chambre
+                name: Thermostat
+                show_temperature_control: true
+                hvac_modes: []
+              - type: custom:mushroom-cover-card
+                entity: cover.cover_chambre
+                show_tilt_position_control: false
+                show_position_control: false
+                show_buttons_control: true
+                name: Rideaux
+            columns: 2
+    cards: []
+  - icon: mdi:bathtub
+    path: mobile-salle-de-bain
+    theme: Mushroom Shadow
+    type: sections
+    max_columns: 1
+    subview: true
+    sections:
+      - type: grid
+        cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: back
+            layout_options:
+              grid_columns: 1
+              grid_rows: auto
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                icon: mdi:bathtub
+                content: Salle de bain
+              - type: template
+                entity: binary_sensor.motion_salle_de_bain_occupancy
+                hold_action:
+                  action: toggle
+                tap_action:
+                  action: more-info
+                icon: |-
+                  {% if is_state(entity, 'on') %} 
+                   mdi:motion-sensor
+                  {% elif is_state(entity, 'off') %} 
+                   mdi:motion-sensor-off
+                  {% else %}
+                   mdi:alert
+                  {% endif %}
+                icon_color: |-
+                  {% if is_state(entity, 'on') %} 
+                   green
+                  {% elif is_state(entity, 'off') %} 
+                   grey
+                  {% else %}
+                   orange
+                  {% endif %}
+                content: |-
+                  {% if is_state(entity, 'on') %} 
+                   Détécté
+                  {% elif is_state(entity, 'off') %} 
+                   Non-Détécté
+                  {% else %}
+                   orange
+                  {% endif %}
+            alignment: start
+            view_layout:
+              position: main
+            layout_options:
+              grid_columns: 3
+              grid_rows: auto
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.temp_salle_de_bain_temperature
+                primary_info: state
+                secondary_info: none
+                icon_color: red
+              - type: custom:mushroom-entity-card
+                entity: sensor.temp_salle_de_bain_humidity
+                primary_info: state
+                secondary_info: none
+                icon_color: blue
+            columns: 2
+      - type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            entity: cover.cover_chambre
+            name: Lumières
+            icon: mdi:lightbulb
+            card_layout: large
+          - type: custom:mushroom-light-card
+            icon: mdi:light-recessed
+            show_brightness_control: true
+            show_color_control: true
+            show_color_temp_control: true
+            use_light_color: true
+            collapsible_controls: false
+            name: Spot
+            entity: light.spot_salle_de_bain
+            layout_options:
+              grid_columns: 4
+              grid_rows: 2
+            secondary_info: none
+      - type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            entity: cover.cover_chambre
+            name: Appareils
+            icon: mdi:devices
+            card_layout: large
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-select-card
+                entity: select.radiateur_salle_de_bain_pilot_wire_mode
+                icon: mdi:radiator
+                fill_container: false
+                name: Radiateur
+                secondary_info: none
+              - type: custom:mushroom-climate-card
+                entity: climate.salle_de_bain
+                name: Thermostat
+                show_temperature_control: true
+                hvac_modes: []
+            columns: 2
+  - icon: mdi:toilet
+    path: mobile-toilettes
+    theme: Mushroom Shadow
+    type: sections
+    max_columns: 1
+    subview: true
+    sections:
+      - type: grid
+        cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: back
+            layout_options:
+              grid_columns: 1
+              grid_rows: auto
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                icon: mdi:toilet
+                content: Toilettes
+              - type: template
+                entity: binary_sensor.aqara_presence_sensor_fp1e_occupation
+                hold_action:
+                  action: toggle
+                tap_action:
+                  action: more-info
+                icon: |-
+                  {% if is_state(entity, 'on') %} 
+                   mdi:motion-sensor
+                  {% elif is_state(entity, 'off') %} 
+                   mdi:motion-sensor-off
+                  {% else %}
+                   mdi:alert
+                  {% endif %}
+                icon_color: |-
+                  {% if is_state(entity, 'on') %} 
+                   green
+                  {% elif is_state(entity, 'off') %} 
+                   grey
+                  {% else %}
+                   orange
+                  {% endif %}
+                content: |-
+                  {% if is_state(entity, 'on') %} 
+                   Détécté
+                  {% elif is_state(entity, 'off') %} 
+                   Non-Détécté
+                  {% else %}
+                   orange
+                  {% endif %}
+            alignment: start
+            view_layout:
+              position: main
+            layout_options:
+              grid_columns: 3
+              grid_rows: auto
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.temp_toilettes_temperature
+                primary_info: state
+                secondary_info: none
+                icon_color: red
+              - type: custom:mushroom-entity-card
+                entity: sensor.temp_toilettes_humidity
+                primary_info: state
+                secondary_info: none
+                icon_color: blue
+            columns: 2
+      - type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            entity: cover.cover_chambre
+            name: Lumières
+            icon: mdi:lightbulb
+            card_layout: large
+          - type: custom:mushroom-light-card
+            entity: light.plafond_toilettes
+            name: Plafond
+            show_brightness_control: true
+            show_color_control: true
+            show_color_temp_control: true
+            use_light_color: true
+            layout_options:
+              grid_columns: 4
+              grid_rows: 2
+            secondary_info: none
+  - type: sections
+    max_columns: 1
+    sections:
+      - type: grid
+        cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: back
+            layout_options:
+              grid_columns: 1
+              grid_rows: auto
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: weather
+                entity: weather.maison
+                show_temperature: true
+                show_conditions: false
+                tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+              - type: template
+                tap_action:
+                  action: none
+                icon: mdi:home-lightning-bolt
+                content: Énergie
+                icon_color: |-
+                  {% if is_state(entity, 'Blanc') %}
+                    white
+                  {% elif is_state(entity, 'Bleu') %}  
+                    blue
+                  {% elif is_state(entity, 'Rouge') %}  
+                    red
+                  {% else %}  
+                    grey
+                  {% endif %}
+                entity: sensor.rte_tempo_couleur_actuelle
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+            alignment: start
+            view_layout:
+              position: main
+            layout_options:
+              grid_columns: 3
+              grid_rows: auto
+          - type: vertical-stack
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Aujourd'hui
+                    secondary: '{{ states(entity) }}'
+                    icon: mdi:lightning-bolt
+                    icon_color: |-
+                      {% if is_state(entity, 'Blanc') %}
+                        white
+                      {% elif is_state(entity, 'Bleu') %}  
+                        blue
+                      {% elif is_state(entity, 'Rouge') %}  
+                        red
+                      {% else %}  
+                        grey
+                      {% endif %}
+                    badge_color: ''
+                    entity: sensor.rte_tempo_couleur_actuelle
+                  - type: custom:mushroom-template-card
+                    primary: Demain
+                    secondary: '{{ states(entity) }}'
+                    icon: mdi:calendar
+                    icon_color: |-
+                      {% if is_state(entity, 'Blanc') %}
+                        white
+                      {% elif is_state(entity, 'Bleu') %}  
+                        blue
+                      {% elif is_state(entity, 'Rouge') %}  
+                        red
+                      {% else %}  
+                        grey
+                      {% endif %}
+                    badge_color: ''
+                    entity: sensor.rte_tempo_prochaine_couleur
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_bleu
+                    icon_color: blue
+                    name: Bleu
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_blanc
+                    icon_color: grey
+                    name: Blanc
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_rouge
+                    icon_color: red
+                    name: Rouge
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: custom:bar-card
+              title_position: inside
+              height: 38
+              positions:
+                icon: inside
+                indicator: inside
+                name: inside
+                value: inside
+              show_icon: true
+              align: split
+              columns: '1'
+              unit_of_measurement: W
+              severity:
+                - color: gray
+                  from: 0
+                  to: 5
+                - color: pink
+                  from: 5
+                  to: 49
+                - color: yellow
+                  from: 50
+                  to: 200
+                - color: orange
+                  from: 201
+                  to: 1000
+                - color: red
+                  from: 1000
+                  to: 10000
+              card_mod:
+                style: >
+                  bar-card-currentbar, bar-card-current, bar-card-backgroundbar
+                  {
+
+                      height: 5px !important;
+                      margin-top: 30px;
+                  }
+
+                  ha-card {
+                      background: none;
+                      box-shadow: none;
+                  }
+
+                  ha-icon{
+                    color: white !important;
+                  }
+
+                  bar-card-iconbar {
+                      margin-bottom: 10px;
+                  }
+            filter:
+              exclude:
+                - entity_id: sensor.metered_wall_plug_switch_device_power
+              include:
+                - entity_id: ^sensor.*power$
+            sort:
+              numeric: true
+              reverse: true
+              ip: false
+              ignore_case: false
+              method: state
+            show_empty: false
+        title: ⚡️ Consommation
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: custom:bar-card
+              title_position: inside
+              height: 38
+              positions:
+                icon: inside
+                indicator: inside
+                name: inside
+                value: inside
+              show_icon: true
+              align: split
+              columns: '2'
+              max: 100
+              unit_of_measurement: '%'
+              severity:
+                - color: '#d11e1e'
+                  from: 0
+                  to: 5
+                - color: '#cf2d11'
+                  from: 6
+                  to: 10
+                - color: '#cc3900'
+                  from: 11
+                  to: 15
+                - color: '#c84400'
+                  from: 16
+                  to: 20
+                - color: '#c44d00'
+                  from: 21
+                  to: 25
+                - color: '#bf5600'
+                  from: 26
+                  to: 30
+                - color: '#b95f00'
+                  from: 31
+                  to: 35
+                - color: '#b36600'
+                  from: 36
+                  to: 40
+                - color: '#ac6e00'
+                  from: 41
+                  to: 45
+                - color: '#a57500'
+                  from: 46
+                  to: 50
+                - color: '#9d7b00'
+                  from: 51
+                  to: 55
+                - color: '#948100'
+                  from: 56
+                  to: 60
+                - color: '#8b8700'
+                  from: 61
+                  to: 65
+                - color: '#818d00'
+                  from: 66
+                  to: 70
+                - color: '#769200'
+                  from: 71
+                  to: 75
+                - color: '#6a9700'
+                  from: 76
+                  to: 80
+                - color: '#5d9c00'
+                  from: 81
+                  to: 85
+                - color: '#4da100'
+                  from: 86
+                  to: 90
+                - color: '#39a500'
+                  from: 91
+                  to: 95
+                - color: '#15a911'
+                  from: 96
+                  to: 100
+              card_mod:
+                style: >
+                  bar-card-currentbar, bar-card-current, bar-card-backgroundbar
+                  {
+
+                      height: 5px !important;
+                      margin-top: 30px;
+                  }
+
+                  ha-card {
+                      background: none;
+                      box-shadow: none;
+                  }
+
+                  ha-icon{
+                    color: white !important;
+                  }
+
+                  bar-card-iconbar {
+                      margin-bottom: 10px;
+                  }
+            filter:
+              exclude:
+                - entity_id: ^sensor.robonect*$
+              include:
+                - entity_id: ^sensor.radiateur_*_battery_level$
+                - entity_id: ^sensor.*_battery$
+                - entity_id: ^sensor.tpms*_batt$
+                - entity_id: ^sensor.*_battery_charge$
+                - entity_id: ^sensor.*_batterie$
+            sort:
+              numeric: false
+              reverse: false
+              ip: false
+              ignore_case: false
+              method: friendly_name
+            show_empty: false
+        title: 🪫 Batteries
+    cards: []
+    path: mobile-energy
+    icon: mdi:home-lightning-bolt
+    theme: Mushroom Shadow
+    subview: true
+  - type: sections
+    max_columns: 1
+    sections:
+      - type: grid
+        cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: back
+            layout_options:
+              grid_columns: 1
+              grid_rows: auto
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: weather
+                entity: weather.maison
+                show_temperature: true
+                show_conditions: false
+                tap_action:
+                  action: none
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+              - type: template
+                tap_action:
+                  action: none
+                icon: mdi:home-lightning-bolt
+                content: Énergie
+                icon_color: |-
+                  {% if is_state(entity, 'Blanc') %}
+                    white
+                  {% elif is_state(entity, 'Bleu') %}  
+                    blue
+                  {% elif is_state(entity, 'Rouge') %}  
+                    red
+                  {% else %}  
+                    grey
+                  {% endif %}
+                entity: sensor.rte_tempo_couleur_actuelle
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+            alignment: start
+            view_layout:
+              position: main
+            layout_options:
+              grid_columns: 3
+              grid_rows: auto
+          - type: custom:meteofrance-weather-card
+            entity: weather.vaux_sur_mer
+            animated_icons: true
+            alert_forecast: true
+            details: false
+            current: true
+            one_hour_forecast: true
+            forecast: true
+            alertEntity: sensor.alerte_meteo
+            cloudCoverEntity: sensor.vaux_sur_mer_cloud_cover
+            rainChanceEntity: sensor.vaux_sur_mer_rain_chance
+            freezeChanceEntity: sensor.vaux_sur_mer_freeze_chance
+            snowChanceEntity: sensor.vaux_sur_mer_snow_chance
+            uvEntity: sensor.vaux_sur_mer_uv
+            rainForecastEntity: sensor.bordeaux_next_rain
+          - type: horizontal-stack
+            cards:
+              - entities:
+                  - entity: sensor.maison_temperature
+                    color: '#df6366'
+                    name: Moy. Maison
+                show:
+                  labels: false
+                  legend: false
+                  icon: null
+                  name: false
+                  fill: false
+                height: 100
+                align_state: null
+                align_header: center
+                font_size: 70
+                hours_to_show: 24
+                decimals: 0
+                hour24: true
+                line_width: 3
+                points_per_hour: 0.25
+                type: custom:mini-graph-card
+              - entities:
+                  - entity: sensor.maison_humidite
+                    color: turquoise
+                    name: Température
+                show:
+                  labels: false
+                  legend: false
+                  labels_secondary: true
+                  icon: null
+                  name: false
+                  fill: null
+                height: 100
+                font_size: 70
+                hours_to_show: 24
+                decimals: 0
+                hour24: true
+                line_width: 2
+                name: Salon
+                points_per_hour: 0.25
+                type: custom:mini-graph-card
+      - type: grid
+        cards:
+          - type: custom:apexcharts-card
+            graph_span: 24h
+            update_interval: 1h
+            apex_config:
+              chart:
+                height: 250px
+            header:
+              show: true
+              title: Température
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: second
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+              - id: first
+                min: ~10
+                max: ~20
+                opposite: true
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+            all_series_config:
+              group_by:
+                func: avg
+                duration: 1h
+              show:
+                legend_value: false
+                extremas: false
+            series:
+              - entity: sensor.temp_salon_temperature
+                name: Salon
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_chambre_temperature
+                name: Chambre
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_salle_de_bain_temperature
+                name: Salle de Bain
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_toilettes_temperature
+                name: Toilettes
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+        title: Températures
+      - type: grid
+        cards:
+          - type: custom:apexcharts-card
+            graph_span: 24h
+            update_interval: 1h
+            apex_config:
+              chart:
+                height: 250px
+            header:
+              show: true
+              title: Humidité
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: second
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+              - id: first
+                min: ~50
+                max: ~70
+                opposite: true
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+            all_series_config:
+              group_by:
+                func: avg
+                duration: 1h
+              show:
+                legend_value: false
+                extremas: false
+            series:
+              - entity: sensor.temp_salon_humidity
+                name: Salon
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_chambre_humidity
+                name: Chambre
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_salle_de_bain_humidity
+                name: Salle de Bain
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_toilettes_humidity
+                name: Toilettes
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+        title: Humidité
+    path: mobile-temperature
+    icon: mdi:thermometer
+    theme: Mushroom Shadow
+    cards: []
+    subview: true
+  - type: sections
+    max_columns: 1
+    sections:
+      - type: grid
+        cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: back
+            layout_options:
+              grid_columns: 1
+              grid_rows: auto
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                icon: mdi:nas
+                content: Baie
+            alignment: start
+            view_layout:
+              position: main
+            layout_options:
+              grid_columns: 3
+              grid_rows: auto
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.temp_baie_temperature
+                primary_info: state
+                secondary_info: none
+                icon_color: red
+              - type: custom:mushroom-entity-card
+                entity: sensor.temp_baie_humidite
+                primary_info: state
+                secondary_info: none
+                icon_color: blue
+              - type: custom:mushroom-entity-card
+                entity: sensor.plug_apc_power
+                primary_info: state
+                secondary_info: none
+                icon_color: accent
+                icon: mdi:lightning-bolt
+      - type: grid
+        cards:
+          - type: custom:bubble-card
+            card_type: separator
+            name: Onduleur
+            icon: phu:apc-ups-upright
+            card_layout: large
+          - type: picture
+            image: /local/apc.png
+            layout_options:
+              grid_columns: 1
+              grid_rows: 2
+          - type: custom:bar-card
+            title_position: inside
+            name: Utilisation
+            show_icon: true
+            align: split
+            columns: 1
+            max: 100
+            unit_of_measurement: '%'
+            severity:
+              - color: Green
+                from: 0
+                to: 25
+              - color: Blue
+                from: 26
+                to: 50
+              - color: Orange
+                from: 51
+                to: 80
+              - color: Red
+                from: 81
+                to: 100
+            entities:
+              - entity: sensor.ups_load
+            layout_options:
+              grid_columns: 3
+              grid_rows: auto
+          - type: custom:bar-card
+            title_position: inside
+            icon: mdi:battery
+            name: Charge
+            show_icon: true
+            align: split
+            columns: 1
+            max: 100
+            unit_of_measurement: '%'
+            severity:
+              - color: Red
+                from: 0
+                to: 25
+              - color: Orange
+                from: 26
+                to: 50
+              - color: Green
+                from: 51
+                to: 100
+            style: |
+              ha-card {
+                  background: none;
+                  box-shadow: none;
+              }
+            entities:
+              - entity: sensor.ups_battery_charge
+            layout_options:
+              grid_columns: 3
+              grid_rows: auto
+      - type: grid
+        cards:
+          - type: custom:bar-card
+            entities:
+              - entity: sensor.nas_ds916_utilisation_du_processeur_utilisateur
+                name: CPU
+                icon: phu:intel-cpu
+                height: 80%
+                color: rgb(68, 115, 158)
+                min: 1
+                max: 100
+              - entity: sensor.nas_ds916_utilisation_de_la_memoire_reelle
+                name: RAM
+                icon: phu:ram-memory
+                height: 80%
+                color: rgb(68, 115, 158)
+                min: 1
+                max: 100
+              - entity: sensor.nas_ds916_volume_1_volume_utilise
+                name: STORAGE
+                icon: mdi:harddisk
+                height: 80%
+                color: rgb(68, 115, 158)
+                min: 1
+                max: 100
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                primary: HDD1
+                secondary: '{{ states(''sensor.nas_ds916_drive_1_temperature'') }}°C'
+                icon: mdi:harddisk
+                layout: vertical
+                icon_color: >-
+                  {{ 'green' if states('sensor.nas_ds916_drive_1_etat') ==
+                  'normal' else 'red' }}
+                entity: sensor.nas_ds916_drive_1_temperature
+              - type: custom:mushroom-template-card
+                primary: HDD2
+                secondary: '{{ states(''sensor.nas_ds916_drive_2_temperature'') }}°C'
+                icon: mdi:harddisk
+                layout: vertical
+                icon_color: >-
+                  {{ 'green' if states('sensor.nas_ds916_drive_2_etat') ==
+                  'normal' else 'red' }}
+              - type: custom:mushroom-template-card
+                primary: HDD3
+                secondary: '{{ states(''sensor.nas_ds916_drive_3_temperature'') }}°C'
+                icon: mdi:harddisk
+                layout: vertical
+                icon_color: >-
+                  {{ 'green' if states('sensor.nas_ds916_drive_3_etat') ==
+                  'normal' else 'red' }}
+              - type: custom:mushroom-template-card
+                primary: HDD4
+                secondary: '{{ states(''sensor.nas_ds916_drive_4_temperature'') }}°C'
+                icon: mdi:harddisk
+                layout: vertical
+                icon_color: >-
+                  {{ 'green' if states('sensor.nas_ds916_drive_4_etat') ==
+                  'normal' else 'red' }}
+        title: NAS
+    path: mobile-baie
+    icon: mdi:nas
+    theme: Mushroom Shadow
+    cards: []
+    subview: true
