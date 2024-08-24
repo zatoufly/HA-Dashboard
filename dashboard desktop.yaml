@@ -1,0 +1,2011 @@
+title: Maison
+views:
+  - icon: mdi:home
+    path: desktop
+    theme: Mushroom Shadow
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Aujourd'hui
+                    secondary: '{{ states(entity) }}'
+                    icon: mdi:lightning-bolt
+                    icon_color: |-
+                      {% if is_state(entity, 'Blanc') %}
+                        white
+                      {% elif is_state(entity, 'Bleu') %}  
+                        blue
+                      {% elif is_state(entity, 'Rouge') %}  
+                        red
+                      {% else %}  
+                        grey
+                      {% endif %}
+                    badge_color: ''
+                    entity: sensor.rte_tempo_couleur_actuelle
+                  - type: custom:mushroom-template-card
+                    primary: Demain
+                    secondary: '{{ states(entity) }}'
+                    icon: mdi:calendar
+                    icon_color: |-
+                      {% if is_state(entity, 'Blanc') %}
+                        white
+                      {% elif is_state(entity, 'Bleu') %}  
+                        blue
+                      {% elif is_state(entity, 'Rouge') %}  
+                        red
+                      {% else %}  
+                        grey
+                      {% endif %}
+                    badge_color: ''
+                    entity: sensor.rte_tempo_prochaine_couleur
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_bleu
+                    icon_color: blue
+                    name: Bleu
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_blanc
+                    icon_color: grey
+                    name: Blanc
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_rouge
+                    icon_color: red
+                    name: Rouge
+          - type: custom:meteofrance-weather-card
+            entity: weather.vaux_sur_mer
+            animated_icons: true
+            alert_forecast: true
+            details: false
+            current: true
+            one_hour_forecast: true
+            forecast: true
+            rainChanceEntity: sensor.17_weather_alert
+            uvEntity: sensor.17_weather_alert
+            cloudCoverEntity: sensor.17_weather_alert
+            freezeChanceEntity: sensor.17_weather_alert
+            snowChanceEntity: sensor.17_weather_alert
+            alertEntity: sensor.17_weather_alert
+          - type: custom:mushroom-title-card
+            title: ''
+            alignment: start
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-climate-card
+                entity: climate.salon
+                show_temperature_control: true
+                collapsible_controls: false
+                hvac_modes: []
+                layout: vertical
+                name: Salon
+              - type: custom:mushroom-climate-card
+                entity: climate.chambre
+                show_temperature_control: true
+                collapsible_controls: false
+                hvac_modes: []
+                layout: vertical
+              - type: custom:mushroom-climate-card
+                show_temperature_control: true
+                collapsible_controls: false
+                hvac_modes: []
+                name: SdB
+                layout: vertical
+                entity: climate.salle_de_bain
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-humidifier-card
+                entity: humidifier.dehumidifier_f538
+                show_target_humidity_control: false
+                layout: vertical
+                name: Deshumidificateur
+              - type: tile
+                entity: fan.dehumidifier_f538_fan
+                state_content: preset_mode
+                show_entity_picture: false
+                vertical: true
+                name: Fan
+          - type: custom:mushroom-title-card
+            title: ''
+            alignment: start
+          - type: vertical-stack
+            cards:
+              - type: conditional
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.temp_salle_de_bain_humidity
+                    above: 75
+                card:
+                  type: tile
+                  visibility:
+                    - condition: numeric_state
+                      entity: sensor.temp_salle_de_bain_humidity
+                      above: 75
+                  entity: sensor.temp_salle_de_bain_humidity
+                  hide_state: true
+                  vertical: false
+                  name: 'Humidité trop haute : Salle de bain'
+                  icon: mdi:water-percent-alert
+                  color: red
+                  show_entity_picture: false
+                  tap_action:
+                    action: none
+                  icon_tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - condition: state
+                    entity: binary_sensor.dehumidifier_f538_tank_full
+                    state: 'on'
+                card:
+                  type: tile
+                  visibility:
+                    - condition: numeric_state
+                      entity: sensor.temp_salle_de_bain_humidity
+                      above: 75
+                  hide_state: true
+                  vertical: false
+                  name: Réservoir déshumidificateur plein
+                  icon: mdi:air-humidifier-off
+                  color: red
+                  show_entity_picture: false
+                  tap_action:
+                    action: none
+                  icon_tap_action:
+                    action: none
+                  entity: humidifier.dehumidifier_f538
+              - type: conditional
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.temp_salon_humidity
+                    above: 75
+                card:
+                  type: tile
+                  visibility:
+                    - condition: numeric_state
+                      entity: sensor.temp_salon_humidity
+                      above: 75
+                  entity: sensor.temp_salon_humidity
+                  hide_state: true
+                  vertical: false
+                  name: 'Humidité trop haute : Salon'
+                  icon: mdi:water-percent-alert
+                  color: red
+                  show_entity_picture: false
+                  tap_action:
+                    action: none
+                  icon_tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.temp_chambre_humidity
+                    above: 75
+                card:
+                  type: tile
+                  visibility:
+                    - condition: numeric_state
+                      entity: sensor.temp_chambre_humidity
+                      above: 75
+                  entity: sensor.temp_chambre_humidity
+                  hide_state: true
+                  vertical: false
+                  name: 'Humidité trop haute : Chambre'
+                  icon: mdi:water-percent-alert
+                  color: red
+                  show_entity_picture: false
+                  tap_action:
+                    action: none
+                  icon_tap_action:
+                    action: none
+              - type: conditional
+                conditions:
+                  - condition: numeric_state
+                    entity: sensor.temp_toilettes_humidity
+                    above: 75
+                card:
+                  type: tile
+                  visibility:
+                    - condition: numeric_state
+                      entity: sensor.temp_toilettes_humidity
+                      above: 75
+                  entity: sensor.temp_toilettes_humidity
+                  hide_state: true
+                  vertical: false
+                  name: 'Humidité trop haute : Toilettes'
+                  icon: mdi:water-percent-alert
+                  color: red
+                  show_entity_picture: false
+                  tap_action:
+                    action: none
+                  icon_tap_action:
+                    action: none
+      - type: grid
+        cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                icon: mdi:sofa
+                content: Salon
+              - type: entity
+                entity: sensor.temp_salon_temperature
+                icon_color: accent
+              - type: entity
+                entity: sensor.temp_salon_humidity
+                icon_color: primary
+              - type: template
+                entity: binary_sensor.fenetre_salon_contact
+                hold_action:
+                  action: toggle
+                tap_action:
+                  action: more-info
+                icon: |-
+                  {% if is_state(entity, 'on') %} 
+                   mdi:window-open-variant
+                  {% elif is_state(entity, 'off') %} 
+                   mdi:window-closed-variant
+                  {% else %}
+                   mdi:window-shutter-alert
+                  {% endif %}
+                icon_color: |-
+                  {% if is_state(entity, 'on') %} 
+                   green
+                  {% elif is_state(entity, 'off') %} 
+                   grey
+                  {% else %}
+                   orange
+                  {% endif %}
+                content: |-
+                  {% if is_state(entity, 'on') %} 
+                   Ouvert
+                  {% elif is_state(entity, 'off') %} 
+                   Fermé
+                  {% else %}
+                   orange
+                  {% endif %}
+            alignment: center
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-light-card
+                icon: mdi:led-strip-variant
+                show_brightness_control: false
+                show_color_control: false
+                show_color_temp_control: false
+                use_light_color: true
+                collapsible_controls: false
+                name: Cuisine
+                layout: vertical
+                entity: light.ruban_cuisine
+                fill_container: false
+                secondary_info: none
+              - type: custom:mushroom-light-card
+                entity: light.hue_play_tv
+                icon: mdi:television
+                show_brightness_control: false
+                show_color_control: false
+                show_color_temp_control: false
+                use_light_color: true
+                collapsible_controls: false
+                layout: vertical
+                name: Coin TV
+                secondary_info: none
+                fill_container: false
+              - type: custom:mushroom-template-card
+                primary: PlayStation
+                icon: mdi:sony-playstation
+                icon_color: '{{ ''green'' if states(entity) == ''on'' else ''grey'' }}'
+                tap_action:
+                  action: toggle
+                entity: switch.evvr_spc_00f6_energy_monitoring_smart_relay_plug
+                secondary: ''
+                layout: vertical
+                badge_icon: ''
+                badge_color: ''
+                fill_container: false
+                multiline_secondary: false
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-select-card
+                entity: select.radiateur_salon_pilot_wire_mode
+                icon: mdi:radiator
+                fill_container: false
+                name: Radiateur Salon
+                secondary_info: none
+              - type: custom:mushroom-media-player-card
+                media_controls:
+                  - previous
+                  - play_pause_stop
+                  - repeat
+                  - next
+                volume_controls:
+                  - volume_buttons
+                  - volume_set
+                use_media_info: true
+                show_volume_level: true
+                collapsible_controls: false
+                icon: ''
+                icon_type: entity-picture
+                entity: media_player.sonos_beam_gen_2
+            columns: 2
+          - type: custom:mushroom-title-card
+            title: ''
+            alignment: start
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                content: Chambre
+                icon: mdi:bed
+              - type: entity
+                entity: sensor.temp_chambre_temperature
+                icon_color: accent
+              - type: entity
+                entity: sensor.temp_chambre_humidity
+                icon_color: primary
+              - type: template
+                entity: binary_sensor.fenetre_chambre_contact
+                hold_action:
+                  action: toggle
+                tap_action:
+                  action: more-info
+                icon: |-
+                  {% if is_state(entity, 'on') %} 
+                   mdi:window-open-variant
+                  {% elif is_state(entity, 'off') %} 
+                   mdi:window-closed-variant
+                  {% else %}
+                   mdi:window-shutter-alert
+                  {% endif %}
+                icon_color: |-
+                  {% if is_state(entity, 'on') %} 
+                   green
+                  {% elif is_state(entity, 'off') %} 
+                   grey
+                  {% else %}
+                   orange
+                  {% endif %}
+                content: |-
+                  {% if is_state(entity, 'on') %} 
+                   Ouvert
+                  {% elif is_state(entity, 'off') %} 
+                   Fermé
+                  {% else %}
+                   orange
+                  {% endif %}
+            alignment: center
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-light-card
+                entity: light.plafond_chambre
+                icon: ''
+                show_brightness_control: false
+                show_color_control: false
+                show_color_temp_control: false
+                use_light_color: true
+                collapsible_controls: false
+                name: Plafond
+                layout: vertical
+                secondary_info: none
+              - type: custom:mushroom-light-card
+                entity: light.ruban_chambre
+                icon: mdi:led-strip-variant
+                show_brightness_control: false
+                show_color_control: false
+                show_color_temp_control: false
+                use_light_color: true
+                collapsible_controls: false
+                fill_container: false
+                name: Lit
+                layout: vertical
+                secondary_info: none
+              - type: custom:mushroom-light-card
+                icon: mdi:led-strip-variant
+                show_brightness_control: false
+                show_color_control: false
+                show_color_temp_control: false
+                use_light_color: true
+                collapsible_controls: false
+                fill_container: false
+                name: Bureau
+                layout: vertical
+                entity: light.ruban_bureau_lumiere
+                secondary_info: none
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-select-card
+                entity: select.radiateur_chambre_pilot_wire_mode
+                secondary_info: none
+                name: Radiateur Chambre
+              - type: custom:mushroom-cover-card
+                entity: cover.cover_chambre
+                show_position_control: false
+                show_buttons_control: true
+                name: Rideaux
+                fill_container: false
+                show_tilt_position_control: false
+                tap_action:
+                  action: none
+            columns: 2
+      - type: grid
+        cards:
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                content: Salle de bain
+                icon: mdi:bathtub
+              - type: entity
+                entity: sensor.temp_salle_de_bain_temperature
+                icon_color: accent
+              - type: entity
+                entity: sensor.temp_salle_de_bain_humidity
+                icon_color: primary
+            alignment: center
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-light-card
+                icon: ''
+                fill_container: false
+                show_brightness_control: false
+                use_light_color: false
+                show_color_temp_control: false
+                show_color_control: false
+                collapsible_controls: false
+                name: Spot
+                entity: light.spot_salle_de_bain
+                layout: vertical
+                secondary_info: none
+              - type: custom:mushroom-entity-card
+                entity: script.radiateur_chambre_1h
+                secondary_info: none
+                layout: vertical
+              - type: custom:mushroom-select-card
+                entity: select.radiateur_salle_de_bain_pilot_wire_mode
+                icon: mdi:radiator
+                fill_container: false
+                name: Radiateur SbB
+                secondary_info: none
+            columns: 2
+          - type: custom:mushroom-title-card
+            title: ''
+            alignment: start
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                content: Toilettes
+                icon: mdi:toilet
+              - type: entity
+                entity: sensor.temp_toilettes_temperature
+                icon_color: accent
+              - type: entity
+                entity: sensor.temp_toilettes_humidity
+                icon_color: primary
+            alignment: center
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-light-card
+                icon: ''
+                fill_container: false
+                show_brightness_control: false
+                use_light_color: false
+                show_color_temp_control: false
+                show_color_control: false
+                collapsible_controls: false
+                name: Plafond
+                entity: light.plafond_toilettes
+                layout: vertical
+                secondary_info: none
+            columns: 2
+    badges:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: weather
+            entity: weather.maison
+            show_temperature: true
+            show_conditions: false
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-maison/temperature
+          - type: template
+            entity: calendar.hp_hc
+            icon: mdi:home-lightning-bolt
+            icon_color: '{{ ''green'' if states(entity) == ''on'' else ''red'' }}'
+            content: '{{ ''HC'' if states(entity) == ''on'' else ''HP'' }}'
+            tap_action:
+              action: more-info
+          - type: entity
+            entity: sensor.maison_temperature
+          - type: entity
+            entity: sensor.maison_humidite
+        view_layout:
+          position: main
+        alignment: start
+      - type: entity
+        entity: scene.soiree_tv
+        state_content: name
+      - type: entity
+        entity: scene.salon_youtube
+        state_content: name
+      - type: entity
+        entity: scene.soiree_tv_2
+        state_content: name
+      - type: entity
+        entity: scene.travail
+        state_content: name
+  - theme: Mushroom Shadow
+    icon: mdi:home
+    subview: false
+    visible:
+      - user: ad707cc8ab2a475e98c6e540629205b6
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: ''
+            alignment: start
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: weather
+                entity: weather.maison
+                show_temperature: true
+                show_conditions: false
+                tap_action:
+                  action: navigate
+                  navigation_path: /dashboard-maison/temperature
+              - type: template
+                entity: calendar.hp_hc
+                icon: mdi:home-lightning-bolt
+                icon_color: '{{ ''green'' if states(entity) == ''on'' else ''red'' }}'
+                content: '{{ ''HC'' if states(entity) == ''on'' else ''HP'' }}'
+                tap_action:
+                  action: more-info
+              - type: entity
+                entity: sensor.maison_temperature
+              - type: entity
+                entity: sensor.maison_humidite
+            alignment: center
+            view_layout:
+              position: main
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-entity-card
+                layout: vertical
+                entity: scene.soiree_tv
+                secondary_info: none
+                primary_info: none
+                tap_action:
+                  action: toggle
+              - type: custom:mushroom-entity-card
+                layout: vertical
+                primary_info: none
+                secondary_info: none
+                entity: scene.salon_youtube
+                tap_action:
+                  action: toggle
+              - type: custom:mushroom-entity-card
+                layout: vertical
+                primary_info: none
+                secondary_info: none
+                entity: scene.soiree_tv_2
+                tap_action:
+                  action: toggle
+              - type: custom:mushroom-entity-card
+                layout: vertical
+                entity: scene.je_suis_rentree
+                primary_info: none
+                secondary_info: none
+                tap_action:
+                  action: toggle
+              - type: custom:mushroom-entity-card
+                layout: vertical
+                primary_info: none
+                secondary_info: none
+                tap_action:
+                  action: toggle
+                entity: scene.travail
+          - type: custom:mushroom-title-card
+            title: ''
+          - type: vertical-stack
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-template-card
+                    primary: Aujourd'hui
+                    secondary: '{{ states(entity) }}'
+                    icon: mdi:lightning-bolt
+                    icon_color: |-
+                      {% if is_state(entity, 'Blanc') %}
+                        white
+                      {% elif is_state(entity, 'Bleu') %}  
+                        blue
+                      {% elif is_state(entity, 'Rouge') %}  
+                        red
+                      {% else %}  
+                        grey
+                      {% endif %}
+                    badge_color: ''
+                    entity: sensor.rte_tempo_couleur_actuelle
+                  - type: custom:mushroom-template-card
+                    primary: Demain
+                    secondary: '{{ states(entity) }}'
+                    icon: mdi:calendar
+                    icon_color: |-
+                      {% if is_state(entity, 'Blanc') %}
+                        white
+                      {% elif is_state(entity, 'Bleu') %}  
+                        blue
+                      {% elif is_state(entity, 'Rouge') %}  
+                        red
+                      {% else %}  
+                        grey
+                      {% endif %}
+                    badge_color: ''
+                    entity: sensor.rte_tempo_prochaine_couleur
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_bleu
+                    icon_color: blue
+                    name: Bleu
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_blanc
+                    icon_color: grey
+                    name: Blanc
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_rouge
+                    icon_color: red
+                    name: Rouge
+          - type: custom:mushroom-title-card
+            title: ''
+          - type: custom:meteofrance-weather-card
+            entity: weather.vaux_sur_mer
+            animated_icons: true
+            alert_forecast: true
+            details: true
+            current: true
+            one_hour_forecast: true
+            forecast: true
+            detailEntity: sensor.17_weather_alert
+            rainChanceEntity: sensor.17_weather_alert
+            uvEntity: sensor.17_weather_alert
+            cloudCoverEntity: sensor.17_weather_alert
+            freezeChanceEntity: sensor.17_weather_alert
+            snowChanceEntity: sensor.17_weather_alert
+            alertEntity: sensor.17_weather_alert
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-climate-card
+                entity: climate.salon
+                show_temperature_control: true
+                collapsible_controls: false
+                hvac_modes: []
+                layout: vertical
+                name: Salon
+              - type: custom:mushroom-climate-card
+                entity: climate.chambre
+                show_temperature_control: true
+                collapsible_controls: false
+                hvac_modes: []
+                layout: vertical
+              - type: custom:mushroom-climate-card
+                show_temperature_control: true
+                collapsible_controls: false
+                hvac_modes: []
+                name: SdB
+                layout: vertical
+                entity: climate.salle_de_bain
+          - type: conditional
+            conditions:
+              - condition: numeric_state
+                entity: sensor.temp_salle_de_bain_humidity
+                above: 75
+            card:
+              type: tile
+              visibility:
+                - condition: numeric_state
+                  entity: sensor.temp_salle_de_bain_humidity
+                  above: 75
+              entity: sensor.temp_salle_de_bain_humidity
+              hide_state: true
+              vertical: false
+              name: 'Humidité trop haute : Salle de bain'
+              icon: mdi:water-percent-alert
+              color: red
+              show_entity_picture: false
+              tap_action:
+                action: none
+              icon_tap_action:
+                action: none
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: binary_sensor.dehumidifier_f538_tank_full
+                state: 'on'
+            card:
+              type: tile
+              visibility:
+                - condition: numeric_state
+                  entity: sensor.temp_salle_de_bain_humidity
+                  above: 75
+              hide_state: true
+              vertical: false
+              name: Réservoir déshumidificateur plein
+              icon: mdi:air-humidifier-off
+              color: red
+              show_entity_picture: false
+              tap_action:
+                action: none
+              icon_tap_action:
+                action: none
+              entity: humidifier.dehumidifier_f538
+          - type: conditional
+            conditions:
+              - condition: numeric_state
+                entity: sensor.temp_salon_humidity
+                above: 75
+            card:
+              type: tile
+              visibility:
+                - condition: numeric_state
+                  entity: sensor.temp_salon_humidity
+                  above: 75
+              entity: sensor.temp_salon_humidity
+              hide_state: true
+              vertical: false
+              name: 'Humidité trop haute : Salon'
+              icon: mdi:water-percent-alert
+              color: red
+              show_entity_picture: false
+              tap_action:
+                action: none
+              icon_tap_action:
+                action: none
+          - type: conditional
+            conditions:
+              - condition: numeric_state
+                entity: sensor.temp_chambre_humidity
+                above: 75
+            card:
+              type: tile
+              visibility:
+                - condition: numeric_state
+                  entity: sensor.temp_chambre_humidity
+                  above: 75
+              entity: sensor.temp_chambre_humidity
+              hide_state: true
+              vertical: false
+              name: 'Humidité trop haute : Chambre'
+              icon: mdi:water-percent-alert
+              color: red
+              show_entity_picture: false
+              tap_action:
+                action: none
+              icon_tap_action:
+                action: none
+          - type: conditional
+            conditions:
+              - condition: numeric_state
+                entity: sensor.temp_toilettes_humidity
+                above: 75
+            card:
+              type: tile
+              visibility:
+                - condition: numeric_state
+                  entity: sensor.temp_toilettes_humidity
+                  above: 75
+              entity: sensor.temp_toilettes_humidity
+              hide_state: true
+              vertical: false
+              name: 'Humidité trop haute : Toilettes'
+              icon: mdi:water-percent-alert
+              color: red
+              show_entity_picture: false
+              tap_action:
+                action: none
+              icon_tap_action:
+                action: none
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: ''
+            alignment: start
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                icon: mdi:sofa
+                content: Salon
+              - type: entity
+                entity: sensor.temp_salon_temperature
+                icon_color: accent
+              - type: entity
+                entity: sensor.temp_salon_humidity
+                icon_color: primary
+              - type: entity
+                entity: binary_sensor.fenetre_salon_contact
+            alignment: center
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-light-card
+                icon: mdi:led-strip-variant
+                show_brightness_control: false
+                show_color_control: false
+                show_color_temp_control: false
+                use_light_color: true
+                collapsible_controls: false
+                name: Cuisine
+                layout: vertical
+                entity: light.ruban_cuisine
+              - type: custom:mushroom-light-card
+                entity: light.hue_play_tv
+                icon: mdi:television
+                show_brightness_control: false
+                show_color_control: false
+                show_color_temp_control: false
+                use_light_color: true
+                collapsible_controls: false
+                layout: vertical
+                name: Coin TV
+              - type: custom:mushroom-select-card
+                entity: select.radiateur_salon_pilot_wire_mode
+                icon: mdi:radiator
+                fill_container: false
+                name: Radiateur Salon
+                secondary_info: none
+              - type: custom:mushroom-media-player-card
+                media_controls:
+                  - previous
+                  - play_pause_stop
+                  - repeat
+                  - next
+                volume_controls:
+                  - volume_buttons
+                  - volume_set
+                use_media_info: true
+                show_volume_level: true
+                collapsible_controls: false
+                icon: ''
+                icon_type: entity-picture
+                entity: media_player.sonos_beam_gen_2
+              - type: custom:mushroom-template-card
+                primary: PlayStation
+                icon: mdi:sony-playstation
+                icon_color: '{{ ''green'' if states(entity) == ''on'' else ''grey'' }}'
+                tap_action:
+                  action: toggle
+                entity: switch.evvr_spc_00f6_energy_monitoring_smart_relay_plug
+                secondary: Light
+                layout: vertical
+                badge_icon: ''
+                badge_color: ''
+                fill_container: false
+                multiline_secondary: false
+            columns: 2
+          - type: custom:mushroom-title-card
+            title: ''
+            subtitle: ''
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                content: Chambre
+                icon: mdi:bed
+              - type: entity
+                entity: sensor.temp_chambre_temperature
+                icon_color: accent
+              - type: entity
+                entity: sensor.temp_chambre_humidity
+                icon_color: primary
+              - type: template
+                entity: binary_sensor.fenetre_chambre_contact
+                hold_action:
+                  action: toggle
+                tap_action:
+                  action: more-info
+                icon: |-
+                  {% if is_state(entity, 'on') %} 
+                   mdi:window-open-variant
+                  {% elif is_state(entity, 'off') %} 
+                   mdi:window-closed-variant
+                  {% else %}
+                   mdi:window-shutter-alert
+                  {% endif %}
+                icon_color: |-
+                  {% if is_state(entity, 'on') %} 
+                   green
+                  {% elif is_state(entity, 'off') %} 
+                   grey
+                  {% else %}
+                   orange
+                  {% endif %}
+                content: |-
+                  {% if is_state(entity, 'on') %} 
+                   Ouvert
+                  {% elif is_state(entity, 'off') %} 
+                   Fermé
+                  {% else %}
+                   orange
+                  {% endif %}
+            alignment: center
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-light-card
+                entity: light.plafond_chambre
+                icon: ''
+                show_brightness_control: false
+                show_color_control: false
+                show_color_temp_control: false
+                use_light_color: true
+                collapsible_controls: false
+                name: Chambre
+                layout: vertical
+              - type: custom:mushroom-light-card
+                entity: light.ruban_chambre
+                icon: mdi:led-strip-variant
+                show_brightness_control: false
+                show_color_control: false
+                show_color_temp_control: false
+                use_light_color: true
+                collapsible_controls: false
+                fill_container: false
+                name: Lit
+                layout: vertical
+              - type: custom:mushroom-select-card
+                entity: select.radiateur_chambre_pilot_wire_mode
+                secondary_info: none
+              - type: custom:mushroom-cover-card
+                entity: cover.cover_chambre
+                show_position_control: false
+                show_buttons_control: true
+                name: Rideaux
+                fill_container: false
+                show_tilt_position_control: false
+                tap_action:
+                  action: none
+            columns: 2
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: ''
+            alignment: start
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-humidifier-card
+                entity: humidifier.dehumidifier_f538
+                show_target_humidity_control: false
+                layout: vertical
+                name: Deshumidificateur
+              - type: tile
+                entity: fan.dehumidifier_f538_fan
+                state_content: preset_mode
+                show_entity_picture: false
+                vertical: true
+                name: Fan
+          - type: custom:mushroom-title-card
+            title: ''
+            subtitle: ''
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                content: Salle de bain
+                icon: mdi:water-circle
+              - type: entity
+                entity: sensor.temp_salle_de_bain_temperature
+                icon_color: accent
+              - type: entity
+                entity: sensor.temp_salle_de_bain_humidity
+                icon_color: primary
+            alignment: center
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-light-card
+                icon: ''
+                fill_container: false
+                show_brightness_control: false
+                use_light_color: false
+                show_color_temp_control: false
+                show_color_control: false
+                collapsible_controls: false
+                name: Spot
+                entity: light.spot_salle_de_bain
+                layout: vertical
+              - type: custom:mushroom-media-player-card
+                media_controls:
+                  - previous
+                  - play_pause_stop
+                  - next
+                  - repeat
+                volume_controls:
+                  - volume_buttons
+                  - volume_set
+                use_media_info: true
+                show_volume_level: true
+                collapsible_controls: false
+                icon: mdi:speaker
+                icon_type: entity-picture
+                entity: media_player.echo_dot_salle_de_bain
+                name: Écho dot 3
+              - type: custom:mushroom-select-card
+                entity: select.radiateur_salle_de_bain_pilot_wire_mode
+                icon: mdi:radiator
+                fill_container: false
+                name: Radiateur SbB
+                secondary_info: none
+              - type: custom:mushroom-entity-card
+                entity: script.radiateur_chambre_1h
+                secondary_info: last-updated
+                layout: vertical
+            columns: 2
+          - type: custom:mushroom-title-card
+            title: ''
+            subtitle: ''
+          - type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                content: Toilettes
+                icon: mdi:toilet
+              - type: entity
+                entity: sensor.temp_toilettes_temperature
+                icon_color: accent
+              - type: entity
+                entity: sensor.temp_toilettes_humidity
+                icon_color: primary
+            alignment: center
+          - square: false
+            type: grid
+            cards:
+              - type: custom:mushroom-light-card
+                icon: ''
+                fill_container: false
+                show_brightness_control: false
+                use_light_color: false
+                show_color_temp_control: false
+                show_color_control: false
+                collapsible_controls: false
+                name: Spot
+                entity: light.plafond_toilettes
+                layout: vertical
+            columns: 2
+  - type: sections
+    icon: mdi:lightning-bolt
+    sections:
+      - type: grid
+        cards:
+          - type: tile
+            entity: sensor.lixee_papp
+            name: Appartement
+            icon: mdi:transmission-tower
+            vertical: true
+            hide_state: false
+            show_entity_picture: false
+            layout_options:
+              grid_columns: 4
+              grid_rows: 2
+          - type: vertical-stack
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_couleur_actuelle
+                    name: Aujourd'hui
+                    icon: mdi:lightning-bolt
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_prochaine_couleur
+                    name: Demain
+                    icon: mdi:calendar
+              - type: horizontal-stack
+                cards:
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_bleu
+                    icon_color: blue
+                    name: Bleu
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_blanc
+                    icon_color: grey
+                    name: Blanc
+                  - type: custom:mushroom-entity-card
+                    entity: sensor.rte_tempo_cycle_jours_restants_rouge
+                    icon_color: red
+                    name: Rouge
+          - type: vertical-stack
+            cards:
+              - type: custom:vertical-stack-in-card
+                cards:
+                  - type: custom:text-divider-row
+                    text: LiNKY
+                    align: center
+                  - type: entities
+                    entities:
+                      - entity: sensor.lixee_papp
+                        type: custom:multiple-entity-row
+                        name: Conso
+                        show_state: false
+                        entities:
+                          - entity: sensor.zlinky_current_summation_derived_one_minute
+                            name: WATT/min
+                          - entity: sensor.lixee_papp
+                            name: PUISSANCE
+                          - entity: sensor.lixee_iinst
+                            name: INTENSITÉ
+                        card_mod:
+                          style: |
+                            :host {
+                              --mdc-icon-size: 29px;
+                            }
+                      - entity: sensor.lixee_active_register_tier_delivered
+                        type: custom:multiple-entity-row
+                        name: Index
+                        icon: mdi:transmission-tower
+                        show_state: false
+                        entities:
+                          - entity: sensor.lixee_active_register_tier_delivered
+                            name: TARIF
+                          - entity: sensor.lixee_hchp
+                            name: HP
+                            format: precision0
+                            unit: ' '
+                          - entity: sensor.lixee_hchc
+                            name: HC
+                            format: precision0
+                            unit: ' '
+                        card_mod:
+                          style: |
+                            :host {
+                              --mdc-icon-size: 30px;
+                            }
+                            .entities-row div.entity:nth-child(1)  {
+                              {% if is_state('sensor.lixee_active_register_tier_delivered', 'HP..') %}
+                                color: red;
+                                font-weight: bold;
+                              {% else %}
+                                color: green;
+                                font-weight: bold;
+                              {% endif %}              
+                            }
+                    card_mod:
+                      style: |
+                        .card-content div {
+                          margin-top: 0px !important;
+                          margin-bottom: 0px  !important;
+                        }
+                        ha-card {
+                          margin-top: -25px;
+                          background: transparent;
+                        }
+                  - type: custom:energy-overview-card
+                    entities:
+                      - power: sensor.zlinky_current_summation_derived_one_minute
+                        current: sensor.lixee_iinst
+                        label_leading: Enedis
+                        label_trailing: Maison
+                        icon_leading: mdi:transmission-tower
+                        icon_trailing: mdi:home-lightning-bolt
+                        color: '#488fc2'
+                        animation:
+                          power: 1000
+                          min_duration: 1
+                          max_duration: 10
+                    card_mod:
+                      style: |
+                        :host {
+                          --card-mod-icon-color: #44739e;
+                          --mdc-icon-size: 26px;
+                        }
+                        ha-card {
+                          margin-top: -23px;
+                          background: transparent;
+                        }        
+                  - type: custom:mod-card
+                    card_mod:
+                      style:
+                        .: |
+                          ha-card {
+                            margin: 0px 10px 0px 0px;
+                          }
+                    card:
+                      type: energy-date-selection
+                  - type: energy-usage-graph
+                    card_mod:
+                      style: |
+                        ha-card {
+                          --divider-color: #44739e;
+                          margin-top: -20px;
+                          background: transparent;
+                        }
+                  - type: energy-sources-table
+                    card_mod:
+                      style: |
+                        ha-card {
+                          box-shadow: none;
+                          margin-top: -19px;
+                        }     
+                card_mod:
+                  style: |
+                    ha-card {
+                      --text-divider-color: rgb(68, 115, 158);
+                      --text-divider-line-size: 1px;
+                      --text-divider-font-size: 15px;
+                      box-shadow: 0 0 0 1px gray;
+                    }
+        title: 🏠 House
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: custom:bar-card
+              title_position: inside
+              height: 38
+              positions:
+                icon: inside
+                indicator: inside
+                name: inside
+                value: inside
+              show_icon: true
+              align: split
+              columns: '1'
+              unit_of_measurement: W
+              severity:
+                - color: gray
+                  from: 0
+                  to: 5
+                - color: pink
+                  from: 5
+                  to: 49
+                - color: yellow
+                  from: 50
+                  to: 200
+              card_mod:
+                style: >
+                  bar-card-currentbar, bar-card-current, bar-card-backgroundbar
+                  {
+
+                      height: 5px !important;
+                      margin-top: 30px;
+                  }
+
+                  ha-card {
+                      background: none;
+                      box-shadow: none;
+                  }
+
+                  ha-icon{
+                    color: white !important;
+                  }
+
+                  bar-card-iconbar {
+                      margin-bottom: 10px;
+                  }
+            filter:
+              exclude:
+                - entity_id: sensor.metered_wall_plug_switch_device_power
+              include:
+                - entity_id: ^sensor.*power$
+            sort:
+              numeric: true
+              reverse: true
+              ip: false
+              ignore_case: false
+              method: state
+            show_empty: false
+        title: ⚡️ Consommation
+      - type: grid
+        cards:
+          - type: custom:auto-entities
+            card:
+              type: custom:bar-card
+              title_position: inside
+              height: 38
+              positions:
+                icon: inside
+                indicator: inside
+                name: inside
+                value: inside
+              show_icon: true
+              align: split
+              columns: '2'
+              max: 100
+              unit_of_measurement: '%'
+              severity:
+                - color: '#d11e1e'
+                  from: 0
+                  to: 5
+                - color: '#cf2d11'
+                  from: 6
+                  to: 10
+                - color: '#cc3900'
+                  from: 11
+                  to: 15
+                - color: '#c84400'
+                  from: 16
+                  to: 20
+                - color: '#c44d00'
+                  from: 21
+                  to: 25
+                - color: '#bf5600'
+                  from: 26
+                  to: 30
+                - color: '#b95f00'
+                  from: 31
+                  to: 35
+                - color: '#b36600'
+                  from: 36
+                  to: 40
+                - color: '#ac6e00'
+                  from: 41
+                  to: 45
+                - color: '#a57500'
+                  from: 46
+                  to: 50
+                - color: '#9d7b00'
+                  from: 51
+                  to: 55
+                - color: '#948100'
+                  from: 56
+                  to: 60
+                - color: '#8b8700'
+                  from: 61
+                  to: 65
+                - color: '#818d00'
+                  from: 66
+                  to: 70
+                - color: '#769200'
+                  from: 71
+                  to: 75
+                - color: '#6a9700'
+                  from: 76
+                  to: 80
+                - color: '#5d9c00'
+                  from: 81
+                  to: 85
+                - color: '#4da100'
+                  from: 86
+                  to: 90
+                - color: '#39a500'
+                  from: 91
+                  to: 95
+                - color: '#15a911'
+                  from: 96
+                  to: 100
+              card_mod:
+                style: >
+                  bar-card-currentbar, bar-card-current, bar-card-backgroundbar
+                  {
+
+                      height: 5px !important;
+                      margin-top: 30px;
+                  }
+
+                  ha-card {
+                      background: none;
+                      box-shadow: none;
+                  }
+
+                  ha-icon{
+                    color: white !important;
+                  }
+
+                  bar-card-iconbar {
+                      margin-bottom: 10px;
+                  }
+            filter:
+              exclude:
+                - entity_id: ^sensor.robonect*$
+              include:
+                - entity_id: ^sensor.radiateur_*_battery_level$
+                - entity_id: ^sensor.*_battery$
+                - entity_id: ^sensor.tpms*_batt$
+                - entity_id: ^sensor.*_battery_charge$
+                - entity_id: ^sensor.*_batteri*
+            sort:
+              numeric: false
+              reverse: false
+              ip: false
+              ignore_case: false
+              method: friendly_name
+            show_empty: false
+        title: 🪫 Batteries
+    theme: Mushroom Shadow
+    cards: []
+    max_columns: 3
+  - type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: custom:apexcharts-card
+            graph_span: 24h
+            update_interval: 1h
+            apex_config:
+              chart:
+                height: 250px
+            header:
+              show: true
+              title: Salon
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: first
+                min: ~50
+                max: ~70
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+              - id: second
+                min: 0
+                max: ~25
+                opposite: true
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+            all_series_config:
+              group_by:
+                func: avg
+                duration: 1h
+              show:
+                legend_value: false
+                extremas: true
+            series:
+              - entity: sensor.temp_salon_temperature
+                name: Température
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_salon_humidity
+                name: Humidité
+                yaxis_id: first
+                type: column
+          - type: custom:apexcharts-card
+            graph_span: 24h
+            apex_config:
+              chart:
+                height: 250px
+            header:
+              show: true
+              title: Chambre
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: first
+                min: ~50
+                max: ~70
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+              - id: second
+                min: ~15
+                max: ~25
+                opposite: true
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+            all_series_config:
+              group_by:
+                func: avg
+                duration: 30m
+              show:
+                legend_value: false
+                extremas: true
+            series:
+              - entity: sensor.temp_chambre_temperature
+                name: Température
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_chambre_humidity
+                name: Humidité
+                yaxis_id: first
+                type: column
+          - type: custom:apexcharts-card
+            graph_span: 24h
+            apex_config:
+              chart:
+                height: 250px
+            header:
+              show: true
+              title: Salle de bain
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: first
+                min: ~50
+                max: ~70
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+              - id: second
+                min: ~15
+                max: ~25
+                opposite: true
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+            all_series_config:
+              group_by:
+                func: avg
+                duration: 30m
+              show:
+                legend_value: false
+                extremas: true
+            series:
+              - entity: sensor.temp_salle_de_bain_temperature
+                name: Température
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_salle_de_bain_humidity
+                name: Humidité
+                yaxis_id: first
+                type: column
+          - type: custom:apexcharts-card
+            graph_span: 24h
+            apex_config:
+              chart:
+                height: 250px
+            header:
+              show: true
+              title: Toilette
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: first
+                min: ~50
+                max: ~70
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+              - id: second
+                min: ~15
+                max: ~25
+                opposite: true
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+            all_series_config:
+              group_by:
+                func: avg
+                duration: 30m
+              show:
+                legend_value: false
+                extremas: true
+            series:
+              - entity: sensor.temp_toilettes_temperature
+                name: Température
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_toilettes_humidity
+                name: Humidité
+                yaxis_id: first
+                type: column
+      - type: grid
+        cards:
+          - type: custom:apexcharts-card
+            graph_span: 24h
+            update_interval: 1h
+            apex_config:
+              chart:
+                height: 250px
+            header:
+              show: true
+              title: Humidité
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: second
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+              - id: first
+                min: ~50
+                max: ~70
+                opposite: true
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+            all_series_config:
+              group_by:
+                func: avg
+                duration: 1h
+              show:
+                legend_value: false
+                extremas: false
+            series:
+              - entity: sensor.temp_salon_humidity
+                name: Salon
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_chambre_humidity
+                name: Chambre
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_salle_de_bain_humidity
+                name: Salle de Bain
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_toilettes_humidity
+                name: Toilettes
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+          - type: custom:apexcharts-card
+            graph_span: 24h
+            update_interval: 1h
+            apex_config:
+              chart:
+                height: 250px
+            header:
+              show: true
+              title: Température
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: second
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+              - id: first
+                min: ~10
+                max: ~20
+                opposite: true
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+            all_series_config:
+              group_by:
+                func: avg
+                duration: 1h
+              show:
+                legend_value: false
+                extremas: false
+            series:
+              - entity: sensor.temp_salon_temperature
+                name: Salon
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_chambre_temperature
+                name: Chambre
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_salle_de_bain_temperature
+                name: Salle de Bain
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_toilettes_temperature
+                name: Toilettes
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+      - type: grid
+        cards:
+          - type: custom:apexcharts-card
+            graph_span: 1w
+            header:
+              show: true
+              title: Salon (1 semaine)
+              show_states: true
+              colorize_states: true
+            yaxis:
+              - id: first
+                min: ~50
+                max: ~70
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+              - id: second
+                min: ~15
+                max: ~25
+                opposite: true
+                decimals: 0
+                apex_config:
+                  tickAmount: 4
+            all_series_config:
+              group_by:
+                func: avg
+                duration: 1d
+              show:
+                legend_value: false
+                extremas: true
+            series:
+              - entity: sensor.temp_salon_temperature
+                name: Température
+                yaxis_id: second
+                stroke_width: 2
+                fill_raw: last
+              - entity: sensor.temp_salon_humidity
+                name: Humidité
+                yaxis_id: first
+                type: column
+          - show_current: true
+            show_forecast: false
+            type: weather-forecast
+            entity: weather.maison
+            forecast_type: daily
+            secondary_info_attribute: humidity
+      - type: grid
+        cards: []
+    max_columns: 3
+    icon: mdi:thermometer
+    cards: []
+  - title: Homelab
+    path: homelab
+    type: sections
+    max_columns: 4
+    sections:
+      - type: grid
+        cards:
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.temp_baie_temperature'') | round(0)}} °C'
+            secondary: ''
+            icon: phu:aqara-temperature
+            layout_options:
+              grid_columns: 2
+              grid_rows: 1
+            entity: sensor.temp_baie_temperature
+            icon_color: ''
+            double_tap_action:
+              action: none
+            tap_action:
+              action: none
+          - type: custom:mushroom-template-card
+            primary: '{{ states(''sensor.plug_apc_power'') | round(0)}} W'
+            secondary: ''
+            icon: phu:apc-ups-upright
+            layout_options:
+              grid_columns: 2
+              grid_rows: 1
+            icon_color: ''
+            tap_action:
+              action: none
+            double_tap_action:
+              action: none
+            entity: sensor.plug_apc_power
+          - type: custom:mushroom-template-card
+            primary: '  WAN'
+            icon: mdi:wan
+            icon_color: '{{ ''green'' if states(entity) == ''on'' else ''red'' }}'
+            tap_action:
+              action: toggle
+            secondary: Status
+            entity: binary_sensor.wan_status
+            layout_options:
+              grid_columns: 4
+              grid_rows: 1
+            fill_container: true
+            multiline_secondary: false
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                primary: DNS Filtre
+                icon: mdi:shield
+                icon_color: '{{ ''green'' if states(entity) == ''on'' else ''red'' }}'
+                tap_action:
+                  action: toggle
+                entity: switch.adguard_home_protection
+                secondary: ''
+                layout: vertical
+              - type: custom:mushroom-template-card
+                primary: Invité
+                icon: mdi:wifi
+                icon_color: '{{ ''green'' if states(entity) == ''on'' else ''red'' }}'
+                tap_action:
+                  action: toggle
+                secondary: ''
+                layout: vertical
+                entity: switch.guest_wifi_switch
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                primary: NAS 916
+                icon: mdi:nas
+                entity: switch.nas_916
+                icon_color: '{{ ''green'' if states(entity) == ''on'' else ''red'' }}'
+                tap_action:
+                  action: toggle
+              - type: custom:mushroom-template-card
+                primary: PVE
+                icon: mdi:server
+                entity: switch.pve
+                icon_color: '{{ ''green'' if states(entity) == ''on'' else ''red'' }}'
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: url
+                  url_path: https://192.168.10.6:8006
+        title: HomeLab
+      - type: grid
+        cards:
+          - type: picture
+            image: /local/ds916.png
+            layout_options:
+              grid_columns: 2
+              grid_rows: 2
+            theme: Mushroom Shadow
+          - type: custom:mushroom-template-card
+            primary: NAS-DS916
+            secondary: >-
+              cpu {{ states('sensor.nas_ds916_utilisation_du_processeur_totale')
+              | round(0) }}% / ram {{
+              states('sensor.nas_ds916_utilisation_de_la_memoire_reelle' ) |
+              round(0) }}% / {{ states('sensor.nas_ds916_temperature' ) |
+              round(0) }}°C
+            icon: mdi:nas
+            icon_color: ''
+            layout: vertical
+          - type: custom:bar-card
+            entities:
+              - entity: sensor.nas_ds916_utilisation_du_processeur_utilisateur
+                name: CPU
+                icon: phu:intel-cpu
+                height: 80%
+                color: rgb(68, 115, 158)
+                min: 1
+                max: 100
+              - entity: sensor.nas_ds916_utilisation_de_la_memoire_reelle
+                name: RAM
+                icon: phu:ram-memory
+                height: 80%
+                color: rgb(68, 115, 158)
+                min: 1
+                max: 100
+              - entity: sensor.nas_ds916_volume_1_volume_utilise
+                name: STORAGE
+                icon: mdi:harddisk
+                height: 80%
+                color: rgb(68, 115, 158)
+                min: 1
+                max: 100
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                primary: HDD1
+                secondary: '{{ states(''sensor.nas_ds916_drive_1_temperature'') }}°C'
+                icon: mdi:harddisk
+                layout: vertical
+                icon_color: >-
+                  {{ 'green' if states('sensor.nas_ds916_drive_1_etat') ==
+                  'normal' else 'red' }}
+                entity: sensor.nas_ds916_drive_1_temperature
+              - type: custom:mushroom-template-card
+                primary: HDD2
+                secondary: '{{ states(''sensor.nas_ds916_drive_2_temperature'') }}°C'
+                icon: mdi:harddisk
+                layout: vertical
+                icon_color: >-
+                  {{ 'green' if states('sensor.nas_ds916_drive_2_etat') ==
+                  'normal' else 'red' }}
+              - type: custom:mushroom-template-card
+                primary: HDD3
+                secondary: '{{ states(''sensor.nas_ds916_drive_3_temperature'') }}°C'
+                icon: mdi:harddisk
+                layout: vertical
+                icon_color: >-
+                  {{ 'green' if states('sensor.nas_ds916_drive_3_etat') ==
+                  'normal' else 'red' }}
+              - type: custom:mushroom-template-card
+                primary: HDD4
+                secondary: '{{ states(''sensor.nas_ds916_drive_4_temperature'') }}°C'
+                icon: mdi:harddisk
+                layout: vertical
+                icon_color: >-
+                  {{ 'green' if states('sensor.nas_ds916_drive_4_etat') ==
+                  'normal' else 'red' }}
+        title: NAS
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: entities
+                show_header_toggle: false
+                entities:
+                  - type: custom:hui-vertical-stack-card
+                    cards:
+                      - type: horizontal-stack
+                        cards:
+                          - type: picture
+                            style: |
+                              ha-card {
+                                  width: 70%;
+                                  background: none;
+                                  box-shadow: none;
+                              }
+                            image: /local/apc.png
+                          - type: vertical-stack
+                            cards:
+                              - type: custom:bar-card
+                                title_position: inside
+                                name: Utilisation
+                                show_icon: true
+                                align: split
+                                columns: 1
+                                max: 100
+                                unit_of_measurement: '%'
+                                severity:
+                                  - color: Green
+                                    from: 0
+                                    to: 25
+                                  - color: Blue
+                                    from: 26
+                                    to: 50
+                                  - color: Orange
+                                    from: 51
+                                    to: 80
+                                  - color: Red
+                                    from: 81
+                                    to: 100
+                                style: |
+                                  ha-card {
+                                      background: none;
+                                      box-shadow: none;
+                                  }
+                                entities:
+                                  - entity: sensor.ups_load
+                              - type: custom:bar-card
+                                title_position: inside
+                                icon: mdi:battery
+                                name: Charge
+                                show_icon: true
+                                align: split
+                                columns: 1
+                                max: 100
+                                unit_of_measurement: '%'
+                                severity:
+                                  - color: Red
+                                    from: 0
+                                    to: 25
+                                  - color: Orange
+                                    from: 26
+                                    to: 50
+                                  - color: Green
+                                    from: 51
+                                    to: 100
+                                style: |
+                                  ha-card {
+                                      background: none;
+                                      box-shadow: none;
+                                  }
+                                entity: sensor.ups_battery_charge
+                      - type: horizontal-stack
+                        cards:
+                          - type: custom:mushroom-entity-card
+                            layout: vertical
+                            fill_container: false
+                            secondary_info: none
+                            tap_action:
+                              action: toggle
+                            entity: sensor.ups_status
+                            primary_info: state
+                            style: |
+                              ha-card {
+                                  background: none;
+                                  box-shadow: none;
+                              }
+                          - type: custom:mushroom-entity-card
+                            layout: vertical
+                            secondary_info: none
+                            tap_action:
+                              action: toggle
+                            entity: sensor.ups_input_voltage
+                            primary_info: state
+                            style: |
+                              ha-card {
+                                  background: none;
+                                  box-shadow: none;
+                              }
+                state_color: true
+        title: Power
+    cards: []
+    theme: Mushroom Shadow
